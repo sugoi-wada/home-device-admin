@@ -6,9 +6,18 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
+	dsn := "host=localhost user=hikaru.wada dbname=home-device-admin-dev port=5432 sslmode=disable TimeZone=Asia/Tokyo"
+	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -16,7 +25,7 @@ func main() {
 
 	e.GET("/", welcome())
 
-	err := e.Start(":3000")
+	err = e.Start(":3000")
 	if err != nil {
 		log.Fatalln(err)
 	}

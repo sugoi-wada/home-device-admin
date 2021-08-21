@@ -3,8 +3,7 @@ module github.com/sugoi-wada/home-device-admin
 go 1.16
 
 require (
-	bitbucket.org/liamstask/goose v0.0.0-20150115234039-8488cc47d90c // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	bitbucket.org/liamstask/goose v0.0.0-20150115234039-8488cc47d90c
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/kylelemons/go-gypsy v1.0.0 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
@@ -15,4 +14,6 @@ require (
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
+	gorm.io/driver/postgres v1.1.0
+	gorm.io/gorm v1.21.13
 )
