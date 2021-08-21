@@ -1,0 +1,17 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type CPDevice {
+  id: ID!
+  gateway_id: String!
+  auth: String!
+  device_id: String!
+  nickname: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type Query {
+  cp_devices: [CPDevice!]!
+}

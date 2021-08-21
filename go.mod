@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	bitbucket.org/liamstask/goose v0.0.0-20150115234039-8488cc47d90c
+	github.com/99designs/gqlgen v0.13.0
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/kylelemons/go-gypsy v1.0.0 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
@@ -12,6 +13,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.8 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
+	github.com/vektah/gqlparser/v2 v2.1.0
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	gorm.io/driver/postgres v1.1.0
