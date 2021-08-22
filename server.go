@@ -11,7 +11,7 @@ import (
 	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sugoi-wada/home-device-admin/db/db_model"
+	"github.com/sugoi-wada/home-device-admin/db/model"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"gorm.io/driver/postgres"
@@ -77,7 +77,7 @@ type UpdateCPDeviceStatus struct {
 func (data UpdateCPDeviceStatus) Run() {
 	fmt.Println("[Run] Update cp devices status...")
 	timestamp := time.Now()
-	devices := []db_model.CPDevice{{
+	devices := []model.CPDevice{{
 		GatewayID: "test-gateway_id",
 		Auth:      "test_auth",
 		DeviceID:  "test_device_id",
