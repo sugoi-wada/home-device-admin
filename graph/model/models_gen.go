@@ -2,12 +2,16 @@
 
 package model
 
+import (
+	"time"
+)
+
 type CPDevice struct {
-	ID        string `json:"id"`
-	GatewayID string `json:"gateway_id"`
-	Auth      string `json:"auth"`
-	DeviceID  string `json:"device_id"`
-	Nickname  string `json:"nickname"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	ID        string    `json:"id"`
+	GatewayID string    `json:"gateway_id"`
+	Auth      string    `json:"auth"`
+	DeviceID  string    `json:"device_id"`
+	Nickname  string    `json:"nickname"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

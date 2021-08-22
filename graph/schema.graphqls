@@ -2,14 +2,16 @@
 #
 # https://gqlgen.com/getting-started/
 
+scalar Time
+
 type CPDevice {
   id: ID!
   gateway_id: String!
   auth: String!
   device_id: String!
   nickname: String!
-  created_at: String!
-  updated_at: String!
+  created_at: Time!
+  updated_at: Time!
 }
 
 type Query {
