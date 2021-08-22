@@ -1,13 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sugoi-wada/home-device-admin/db/db_model"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"gorm.io/driver/postgres"
@@ -22,12 +26,19 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	jobrunner.Start()
+	jobrunner.Now(UpdateCPDeviceStatus{DB: db})
+	jobrunner.Every(10*time.Minute, UpdateCPDeviceStatus{DB: db})
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	e.GET("/", welcome())
+	e.GET("/jobrunner/status", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, jobrunner.StatusJson())
+	})
 
 	graphqlHandler := handler.NewDefaultServer(
 		generated.NewExecutableSchema(
@@ -55,5 +66,25 @@ func main() {
 func welcome() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return c.String(http.StatusOK, "Welcome!")
+	}
+}
+
+type UpdateCPDeviceStatus struct {
+	DB *gorm.DB
+}
+
+func (data UpdateCPDeviceStatus) Run() {
+	fmt.Println("[Run] Update cp devices status...")
+	timestamp := time.Now()
+	devices := []db_model.CPDevice{{
+		GatewayID: "test-gateway_id",
+		Auth:      "test_auth",
+		DeviceID:  "test_device_id",
+		Nickname:  "test_nickname",
+		CreatedAt: timestamp,
+		UpdatedAt: timestamp,
+	}}
+	for _, device := range devices {
+		data.DB.Create(&device)
 	}
 }
