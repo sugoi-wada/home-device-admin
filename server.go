@@ -19,6 +19,7 @@ import (
 )
 
 func main() {
+	time.Local = time.FixedZone("UTC", 0)
 	dsn := "host=localhost user=hikaru.wada dbname=home-device-admin-dev port=5432 sslmode=disable TimeZone=Asia/Tokyo"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
