@@ -1,7 +1,7 @@
 
 -- +goose Up
 -- SQL in section 'Up' is executed when this migration is applied
-create table cp_device (
+create table cp_devices (
   id serial not null,
   gateway_id varchar not null,
   auth varchar not null,
@@ -14,4 +14,4 @@ create table cp_device (
 
 -- +goose Down
 -- SQL section 'Down' is executed when this migration is rolled back
-drop table cp_device;
+drop table cp_devices;
