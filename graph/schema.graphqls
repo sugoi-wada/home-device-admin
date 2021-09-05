@@ -5,13 +5,26 @@
 scalar Time
 
 type CPDevice {
-  id: ID!
   gateway_id: String!
-  auth: String!
   device_id: String!
   nickname: String!
-  created_at: Time!
-  updated_at: Time!
+  power: String!
+  feature: String!
+  speed: String!
+  temp: String!
+  inside_temp: String!
+  nanoex: String!
+  people: String!
+  outside_temp: String!
+  pm25: String!
+  on_timer: String!
+  off_timer: String!
+  vertical_direction: String!
+  horizontal_direction: String!
+  fast: String!
+  econavi: String!
+  volume: String!
+  display_light: String!
 }
 
 type Query {

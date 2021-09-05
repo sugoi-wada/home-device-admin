@@ -2,16 +2,25 @@
 
 package model
 
-import (
-	"time"
-)
-
 type CPDevice struct {
-	ID        string    `json:"id"`
-	GatewayID string    `json:"gateway_id"`
-	Auth      string    `json:"auth"`
-	DeviceID  string    `json:"device_id"`
-	Nickname  string    `json:"nickname"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	GatewayID           string `json:"gateway_id"`
+	DeviceID            string `json:"device_id"`
+	Nickname            string `json:"nickname"`
+	Power               string `json:"power"`
+	Feature             string `json:"feature"`
+	Speed               string `json:"speed"`
+	Temp                string `json:"temp"`
+	InsideTemp          string `json:"inside_temp"`
+	Nanoex              string `json:"nanoex"`
+	People              string `json:"people"`
+	OutsideTemp         string `json:"outside_temp"`
+	Pm25                string `json:"pm25"`
+	OnTimer             string `json:"on_timer"`
+	OffTimer            string `json:"off_timer"`
+	VerticalDirection   string `json:"vertical_direction"`
+	HorizontalDirection string `json:"horizontal_direction"`
+	Fast                string `json:"fast"`
+	Econavi             string `json:"econavi"`
+	Volume              string `json:"volume"`
+	DisplayLight        string `json:"display_light"`
 }
