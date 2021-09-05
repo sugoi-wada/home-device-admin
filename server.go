@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -16,12 +17,20 @@ import (
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func main() {
 	time.Local = time.FixedZone("UTC", 0)
 	dsn := "host=localhost user=hikaru.wada dbname=home-device-admin-dev port=5432 sslmode=disable TimeZone=Asia/Tokyo"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			NameReplacer: strings.NewReplacer("CP", "Cp"),
+		},
+		NowFunc: func() time.Time {
+			return time.Now().Local()
+		},
+	})
 
 	if err != nil {
 		log.Fatalln(err)
