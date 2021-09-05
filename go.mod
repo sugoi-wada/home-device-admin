@@ -1,5 +1,6 @@
 module github.com/sugoi-wada/home-device-admin
 
+// +heroku goVersion go1.16
 go 1.16
 
 require (
