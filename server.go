@@ -11,6 +11,7 @@ import (
 	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sugoi-wada/home-device-admin/env"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"github.com/sugoi-wada/home-device-admin/worker"
@@ -21,8 +22,7 @@ import (
 
 func main() {
 	time.Local = time.FixedZone("UTC", 0)
-	dsn := "host=localhost user=hikaru.wada dbname=home-device-admin-dev port=5432 sslmode=disable TimeZone=Asia/Tokyo"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(env.Get("DB_DSN")), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			NameReplacer: strings.NewReplacer("CP", "Cp"),
 		},
