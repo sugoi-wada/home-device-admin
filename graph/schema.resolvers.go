@@ -18,7 +18,7 @@ func (r *queryResolver) CpDevices(ctx context.Context) ([]*model.CPDevice, error
 	cp_devices := []*model.CPDevice{}
 	for _, device := range db_cp_devices {
 		cp_devices = append(cp_devices, &model.CPDevice{
-			GatewayID:           device.GatewayID,
+			ID:                  device.ID,
 			DeviceID:            device.DeviceID,
 			Nickname:            device.Nickname,
 			Power:               device.State.Power,
@@ -42,6 +42,40 @@ func (r *queryResolver) CpDevices(ctx context.Context) ([]*model.CPDevice, error
 	}
 
 	return cp_devices, nil
+}
+
+func (r *queryResolver) CpDevice(ctx context.Context, id *uint) (*model.CPDevice, error) {
+	dbCpDevice := db_model.CPDevice{}
+	result := r.DB.Joins("State").First(&dbCpDevice, id)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	cpDevice := &model.CPDevice{
+		ID:                  dbCpDevice.ID,
+		DeviceID:            dbCpDevice.DeviceID,
+		Nickname:            dbCpDevice.Nickname,
+		Power:               dbCpDevice.State.Power,
+		Feature:             dbCpDevice.State.Feature,
+		Speed:               dbCpDevice.State.Speed,
+		Temp:                dbCpDevice.State.Temp,
+		InsideTemp:          dbCpDevice.State.InsideTemp,
+		Nanoex:              dbCpDevice.State.Nanoex,
+		People:              dbCpDevice.State.People,
+		OutsideTemp:         dbCpDevice.State.OutsideTemp,
+		Pm25:                dbCpDevice.State.PM25,
+		OnTimer:             dbCpDevice.State.OnTimer,
+		OffTimer:            dbCpDevice.State.OffTimer,
+		VerticalDirection:   dbCpDevice.State.VerticalDirection,
+		HorizontalDirection: dbCpDevice.State.HorizontalDirection,
+		Fast:                dbCpDevice.State.Fast,
+		Econavi:             dbCpDevice.State.Econavi,
+		Volume:              dbCpDevice.State.Volume,
+		DisplayLight:        dbCpDevice.State.DisplayLight,
+	}
+
+	return cpDevice, nil
 }
 
 // Query returns generated.QueryResolver implementation.

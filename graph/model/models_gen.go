@@ -3,7 +3,7 @@
 package model
 
 type CPDevice struct {
-	GatewayID           string `json:"gateway_id"`
+	ID                  uint   `json:"id"`
 	DeviceID            string `json:"device_id"`
 	Nickname            string `json:"nickname"`
 	Power               string `json:"power"`

@@ -48,8 +48,8 @@ type ComplexityRoot struct {
 		Econavi             func(childComplexity int) int
 		Fast                func(childComplexity int) int
 		Feature             func(childComplexity int) int
-		GatewayID           func(childComplexity int) int
 		HorizontalDirection func(childComplexity int) int
+		ID                  func(childComplexity int) int
 		InsideTemp          func(childComplexity int) int
 		Nanoex              func(childComplexity int) int
 		Nickname            func(childComplexity int) int
@@ -66,12 +66,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		CpDevice  func(childComplexity int, id *uint) int
 		CpDevices func(childComplexity int) int
 	}
 }
 
 type QueryResolver interface {
 	CpDevices(ctx context.Context) ([]*model.CPDevice, error)
+	CpDevice(ctx context.Context, id *uint) (*model.CPDevice, error)
 }
 
 type executableSchema struct {
@@ -124,19 +126,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CPDevice.Feature(childComplexity), true
 
-	case "CPDevice.gateway_id":
-		if e.complexity.CPDevice.GatewayID == nil {
-			break
-		}
-
-		return e.complexity.CPDevice.GatewayID(childComplexity), true
-
 	case "CPDevice.horizontal_direction":
 		if e.complexity.CPDevice.HorizontalDirection == nil {
 			break
 		}
 
 		return e.complexity.CPDevice.HorizontalDirection(childComplexity), true
+
+	case "CPDevice.id":
+		if e.complexity.CPDevice.ID == nil {
+			break
+		}
+
+		return e.complexity.CPDevice.ID(childComplexity), true
 
 	case "CPDevice.inside_temp":
 		if e.complexity.CPDevice.InsideTemp == nil {
@@ -229,6 +231,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CPDevice.Volume(childComplexity), true
 
+	case "Query.cp_device":
+		if e.complexity.Query.CpDevice == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cp_device_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CpDevice(childComplexity, args["id"].(*uint)), true
+
 	case "Query.cp_devices":
 		if e.complexity.Query.CpDevices == nil {
 			break
@@ -291,9 +305,10 @@ var sources = []*ast.Source{
 # https://gqlgen.com/getting-started/
 
 scalar Time
+scalar Uint
 
 type CPDevice {
-  gateway_id: String!
+  id: Uint!
   device_id: String!
   nickname: String!
   power: String!
@@ -317,6 +332,7 @@ type CPDevice {
 
 type Query {
   cp_devices: [CPDevice!]!
+  cp_device(id: Uint): CPDevice!
 }
 `, BuiltIn: false},
 }
@@ -338,6 +354,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cp_device_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *uint
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOUint2ᚖuint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -379,7 +410,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _CPDevice_gateway_id(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
+func (ec *executionContext) _CPDevice_id(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -397,7 +428,7 @@ func (ec *executionContext) _CPDevice_gateway_id(ctx context.Context, field grap
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.GatewayID, nil
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -409,9 +440,9 @@ func (ec *executionContext) _CPDevice_gateway_id(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(uint)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNUint2uint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CPDevice_device_id(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
@@ -1112,6 +1143,48 @@ func (ec *executionContext) _Query_cp_devices(ctx context.Context, field graphql
 	res := resTmp.([]*model.CPDevice)
 	fc.Result = res
 	return ec.marshalNCPDevice2ᚕᚖgithubᚗcomᚋsugoiᚑwadaᚋhomeᚑdeviceᚑadminᚋgraphᚋmodelᚐCPDeviceᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_cp_device(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_cp_device_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CpDevice(rctx, args["id"].(*uint))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPDevice)
+	fc.Result = res
+	return ec.marshalNCPDevice2ᚖgithubᚗcomᚋsugoiᚑwadaᚋhomeᚑdeviceᚑadminᚋgraphᚋmodelᚐCPDevice(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2291,8 +2364,8 @@ func (ec *executionContext) _CPDevice(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CPDevice")
-		case "gateway_id":
-			out.Values[i] = ec._CPDevice_gateway_id(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._CPDevice_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2426,6 +2499,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cp_devices(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "cp_device":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cp_device(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -2706,6 +2793,10 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCPDevice2githubᚗcomᚋsugoiᚑwadaᚋhomeᚑdeviceᚑadminᚋgraphᚋmodelᚐCPDevice(ctx context.Context, sel ast.SelectionSet, v model.CPDevice) graphql.Marshaler {
+	return ec._CPDevice(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNCPDevice2ᚕᚖgithubᚗcomᚋsugoiᚑwadaᚋhomeᚑdeviceᚑadminᚋgraphᚋmodelᚐCPDeviceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CPDevice) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -2760,6 +2851,21 @@ func (ec *executionContext) unmarshalNString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNUint2uint(ctx context.Context, v interface{}) (uint, error) {
+	res, err := model.UnmarshalUint(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUint2uint(ctx context.Context, sel ast.SelectionSet, v uint) graphql.Marshaler {
+	res := model.MarshalUint(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -3043,6 +3149,21 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) unmarshalOUint2ᚖuint(ctx context.Context, v interface{}) (*uint, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := model.UnmarshalUint(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUint2ᚖuint(ctx context.Context, sel ast.SelectionSet, v *uint) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return model.MarshalUint(*v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

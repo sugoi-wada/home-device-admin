@@ -3,9 +3,10 @@
 # https://gqlgen.com/getting-started/
 
 scalar Time
+scalar Uint
 
 type CPDevice {
-  gateway_id: String!
+  id: Uint!
   device_id: String!
   nickname: String!
   power: String!
@@ -29,4 +30,5 @@ type CPDevice {
 
 type Query {
   cp_devices: [CPDevice!]!
+  cp_device(id: Uint): CPDevice!
 }
