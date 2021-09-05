@@ -54,3 +54,9 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+  Uint:
+    model: "github.com/sugoi-wada/home-device-admin/graph/model.Uint"
+  Uint32:
+    model: "github.com/sugoi-wada/home-device-admin/graph/model.Uint32"
+  Uint64:
+    model: "github.com/sugoi-wada/home-device-admin/graph/model.Uint64"
