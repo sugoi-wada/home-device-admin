@@ -10,4 +10,5 @@ type CPDevice struct {
 	Nickname  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	State     CPDeviceState
 }

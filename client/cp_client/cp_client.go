@@ -1,6 +1,8 @@
 package cp_client
 
 import (
+	"fmt"
+
 	"github.com/go-resty/resty/v2"
 	"golang.org/x/xerrors"
 )
@@ -78,6 +80,31 @@ type ProductCommand struct {
 	// Parameters
 }
 
+type DeviceInfoResponse struct {
+	Status    string       `json:"status"`
+	Devices   []DeviceInfo `json:"devices"`
+	UpdatedAt string       `json:"updated_at"`
+}
+
+type DeviceInfo struct {
+	DeviceID int32             `json:"DeviceID"`
+	Info     []CommandTypeInfo `json:"Info"`
+}
+
+type CommandTypeInfo struct {
+	CommandType
+	Status string `json:"status"`
+}
+
+type CommandType struct {
+	CommandType string `json:"CommandType"`
+}
+
+type DeviceInfoRequest struct {
+	DeviceID     string        `json:"DeviceID"`
+	CommandTypes []CommandType `json:"CommandTypes"`
+}
+
 type UserLoginRequest struct {
 	Email    string `json:"MemId"`
 	Password string `json:"PW"`
@@ -115,4 +142,23 @@ func (c *Client) DeviceList(cpToken string) (*DeviceListResponse, error) {
 	}
 
 	return res.Result().(*DeviceListResponse), nil
+}
+
+func (c *Client) DeviceInfo(cpToken string, auth string, request DeviceInfoRequest) (*DeviceInfoResponse, error) {
+	if len(request.CommandTypes) > MaxCommandCount {
+		return nil, xerrors.New(fmt.Sprintf("一度に渡す CommandTypes の数が多すぎます。%d個以下にしてください。\n", MaxCommandCount))
+	}
+
+	res, err := c.newRequest().
+		SetHeader("CPToken", cpToken).
+		SetHeader("auth", auth).
+		SetBody(&[]DeviceInfoRequest{request}).
+		SetResult(&DeviceInfoResponse{}).
+		Post("/api/DeviceGetInfo")
+
+	if err != nil {
+		return nil, xerrors.Errorf("%w", err)
+	}
+
+	return res.Result().(*DeviceInfoResponse), nil
 }
