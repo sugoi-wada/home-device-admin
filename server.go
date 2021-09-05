@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -12,7 +11,6 @@ import (
 	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sugoi-wada/home-device-admin/db/model"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"gorm.io/driver/postgres"
@@ -37,8 +35,6 @@ func main() {
 	}
 
 	jobrunner.Start()
-	jobrunner.Now(UpdateCPDeviceStatus{DB: db})
-	jobrunner.Every(10*time.Minute, UpdateCPDeviceStatus{DB: db})
 
 	e := echo.New()
 
@@ -76,25 +72,5 @@ func main() {
 func welcome() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return c.String(http.StatusOK, "Welcome!")
-	}
-}
-
-type UpdateCPDeviceStatus struct {
-	DB *gorm.DB
-}
-
-func (data UpdateCPDeviceStatus) Run() {
-	fmt.Println("[Run] Update cp devices status...")
-	timestamp := time.Now()
-	devices := []model.CPDevice{{
-		GatewayID: "test-gateway_id",
-		Auth:      "test_auth",
-		DeviceID:  "test_device_id",
-		Nickname:  "test_nickname",
-		CreatedAt: timestamp,
-		UpdatedAt: timestamp,
-	}}
-	for _, device := range devices {
-		data.DB.Create(&device)
 	}
 }
