@@ -68,7 +68,7 @@ func main() {
 		return nil
 	})
 
-	err = e.Start(":3000")
+	err = e.Start(":" + os.Getenv("PORT"))
 	if err != nil {
 		log.Fatalln(err)
 	}
