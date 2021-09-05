@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
+	"github.com/sugoi-wada/home-device-admin/worker"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -35,6 +36,10 @@ func main() {
 	}
 
 	jobrunner.Start()
+	jobrunner.Now(worker.RefreshCPToken{DB: db})
+	jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db})
+	jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db})
+	jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db})
 
 	e := echo.New()
 
