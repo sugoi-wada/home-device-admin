@@ -4,14 +4,12 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/ClickHouse/clickhouse-go v1.4.7 // indirect
 	github.com/bamzi/jobrunner v1.0.0
 	github.com/go-resty/resty/v2 v2.6.0
-	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/lib/pq v1.10.3 // indirect
-	github.com/pressly/goose/v3 v3.1.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0

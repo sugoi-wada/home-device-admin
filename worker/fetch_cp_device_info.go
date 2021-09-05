@@ -2,11 +2,11 @@ package worker
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/sugoi-wada/home-device-admin/client/cp_client"
 	"github.com/sugoi-wada/home-device-admin/client/cp_client/command"
 	"github.com/sugoi-wada/home-device-admin/db/model"
-	"github.com/sugoi-wada/home-device-admin/env"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -20,7 +20,7 @@ func (data FetchCPDeviceInfo) Run() {
 	client := cp_client.NewClient()
 
 	var cpUser model.CPUser
-	userResult := data.DB.First(&cpUser, "email = ?", env.Get("CP_EMAIL"))
+	userResult := data.DB.First(&cpUser, "email = ?", os.Getenv("CP_EMAIL"))
 	if userResult.Error != nil {
 		fmt.Println(fmt.Errorf("CPTokenの検索に失敗したため、CPデバイス情報の更新をキャンセルします。 %v", userResult.Error))
 		return

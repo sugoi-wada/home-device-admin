@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sugoi-wada/home-device-admin/env"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"github.com/sugoi-wada/home-device-admin/worker"
@@ -22,7 +22,7 @@ import (
 
 func main() {
 	time.Local = time.FixedZone("UTC", 0)
-	db, err := gorm.Open(postgres.Open(env.Get("DB_DSN")), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			NameReplacer: strings.NewReplacer("CP", "Cp"),
 		},

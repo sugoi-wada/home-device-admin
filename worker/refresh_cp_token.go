@@ -2,10 +2,10 @@ package worker
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/sugoi-wada/home-device-admin/client/cp_client"
 	"github.com/sugoi-wada/home-device-admin/db/model"
-	"github.com/sugoi-wada/home-device-admin/env"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -19,9 +19,9 @@ func (data RefreshCPToken) Run() {
 	client := cp_client.NewClient()
 
 	userLoginResponse, err := client.UserLogin(cp_client.UserLoginRequest{
-		Email:    env.Get("CP_EMAIL"),
-		Password: env.Get("CP_PASSWORD"),
-		AppToken: env.Get("CP_APP_TOKEN"),
+		Email:    os.Getenv("CP_EMAIL"),
+		Password: os.Getenv("CP_PASSWORD"),
+		AppToken: os.Getenv("CP_APP_TOKEN"),
 	})
 
 	if err != nil {
@@ -30,7 +30,7 @@ func (data RefreshCPToken) Run() {
 	}
 
 	cpUser := model.CPUser{
-		Email:        env.Get("CP_EMAIL"),
+		Email:        os.Getenv("CP_EMAIL"),
 		CPToken:      userLoginResponse.CPToken,
 		ExpireTime:   userLoginResponse.ExpireTime,
 		RefreshToken: userLoginResponse.RefreshToken,
