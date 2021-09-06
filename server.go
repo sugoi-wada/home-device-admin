@@ -36,11 +36,12 @@ func main() {
 	}
 
 	jobrunner.Start()
-	jobrunner.Now(worker.RefreshCPToken{DB: db})
-	jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db})
-	jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db})
-	jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db})
-
+	if os.Getenv("DEBUG") != "true" {
+		jobrunner.Now(worker.RefreshCPToken{DB: db})
+		jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db})
+		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db})
+		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db})
+	}
 	e := echo.New()
 
 	e.Use(middleware.Logger())
