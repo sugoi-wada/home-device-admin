@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -12,24 +11,18 @@ import (
 	"github.com/bamzi/jobrunner"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sugoi-wada/home-device-admin/client/cp_client"
+	db_config "github.com/sugoi-wada/home-device-admin/db/config"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
 	"github.com/sugoi-wada/home-device-admin/worker"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 )
 
 func main() {
 	time.Local = time.FixedZone("UTC", 0)
-	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			NameReplacer: strings.NewReplacer("CP", "Cp"),
-		},
-		NowFunc: func() time.Time {
-			return time.Now().Local()
-		},
-	})
+	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), db_config.GetConf())
 
 	if err != nil {
 		log.Fatalln(err)
@@ -37,10 +30,11 @@ func main() {
 
 	jobrunner.Start()
 	if os.Getenv("DEBUG") != "true" {
-		jobrunner.Now(worker.RefreshCPToken{DB: db})
-		jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db})
-		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db})
-		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db})
+		client := cp_client.NewClient()
+		jobrunner.Now(worker.RefreshCPToken{DB: db, Client: client})
+		jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db, Client: client})
+		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db, Client: client})
+		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db, Client: client})
 	}
 	e := echo.New()
 

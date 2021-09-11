@@ -1,0 +1,260 @@
+{
+	"State": "success",
+	"StateMsg": "",
+	"MVersion": "20210910140206",
+	"GWList": [{
+			"GWID": "2C9FFBA9404A",
+			"NickName": "",
+			"auth": "2C9FFBA9404A0AF6DC62FE255718DA8D443A0121F1C2",
+			"HSType": "S",
+			"ModelID": "CZ-T006",
+			"City": "臺北市",
+			"Area": "士林區",
+			"Devices": [{
+				"DeviceID": "1",
+				"NickName": "客廳冷氣",
+				"DeviceType": "1",
+				"AreaID": "0",
+				"ModelType": "PXGD",
+				"Model": "CS-RX63GA2"
+			}]
+		},
+		{
+			"GWID": "2C9FFBCF6DEC",
+			"NickName": "",
+			"auth": "2C9FFBCF6DEC0AF6DC62FE255718DA8D443A0121F1C2",
+			"HSType": "S",
+			"ModelID": "CZ-T006",
+			"City": "新北市",
+			"Area": "中和區",
+			"Devices": [{
+				"DeviceID": "1",
+				"NickName": "部屋のエアコン",
+				"DeviceType": "1",
+				"AreaID": "0",
+				"ModelType": "PXGD",
+				"Model": "CS-RX22GA2"
+			}]
+		}
+	],
+	"CommandList": [{
+		"ModelType": "PXGD",
+		"JSON": [{
+			"DeviceType": 1,
+			"DeviceName": "冷氣機",
+			"ModelType": "PXGD",
+			"ProtocalType": "SAA",
+			"ProtocalVersion": "4",
+			"Timestamp": "20210901181000",
+			"list": [{
+					"CommandType": "0x00",
+					"CommandName": "電源",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"停止",
+							0
+						],
+						[
+							"運轉",
+							1
+						]
+					]
+				},
+				{
+					"CommandType": "0x01",
+					"CommandName": "運轉",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"冷氣",
+							0
+						],
+						[
+							"除濕",
+							1
+						],
+						[
+							"清淨",
+							2
+						],
+						[
+							"自動",
+							3
+						],
+						[
+							"暖氣",
+							4
+						]
+					]
+				},
+				{
+					"CommandType": "0x03",
+					"CommandName": "溫度設定",
+					"ParameterType": "range",
+					"ParameterUnit": "度",
+					"Parameters": [
+						[
+							"Min",
+							16
+						],
+						[
+							"Max",
+							30
+						]
+					]
+				},
+				{
+					"CommandType": "0x02",
+					"CommandName": "風量",
+					"ParameterType": "rangeA",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"Auto",
+							0
+						],
+						[
+							"Min",
+							1
+						],
+						[
+							"Max",
+							5
+						]
+					]
+				},
+				{
+					"CommandType": "0x18",
+					"CommandName": "自體淨",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"關閉",
+							0
+						],
+						[
+							"開啟",
+							1
+						]
+					]
+				},
+				{
+					"CommandType": "0x05",
+					"CommandName": "舒眠",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"關閉",
+							0
+						],
+						[
+							"開啟",
+							1
+						]
+					]
+				},
+				{
+					"CommandType": "0x17",
+					"CommandName": "乾燥防霉",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"關閉",
+							0
+						],
+						[
+							"開啟",
+							1
+						]
+					]
+				},
+				{
+					"CommandType": "0x1e",
+					"CommandName": "操作提示音",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"暗",
+							1
+						],
+						[
+							"ECO燈滅",
+							2
+						]
+					]
+				},
+				{
+					"CommandType": "0x0b",
+					"CommandName": "時間到開",
+					"ParameterType": "range",
+					"ParameterUnit": "分鐘",
+					"Parameters": [
+						[
+							"Min",
+							0
+						],
+						[
+							"Max",
+							1440
+						]
+					]
+				},
+				{
+					"CommandType": "0x0c",
+					"CommandName": "時間到關",
+					"ParameterType": "range",
+					"ParameterUnit": "分鐘",
+					"Parameters": [
+						[
+							"Min",
+							0
+						],
+						[
+							"Max",
+							1440
+						]
+					]
+				},
+				{
+					"CommandType": "0x08",
+					"CommandName": "nanoeX",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"關閉",
+							0
+						],
+						[
+							"開啟",
+							1
+						]
+					]
+				},
+				{
+					"CommandType": "0x1b",
+					"CommandName": "ECONAVI",
+					"ParameterType": "enum",
+					"ParameterUnit": "",
+					"Parameters": [
+						[
+							"關閉",
+							0
+						],
+						[
+							"開啟",
+							1
+						]
+					]
+				}
+			]
+		}]
+	}]
+}

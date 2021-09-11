@@ -12,12 +12,12 @@ import (
 )
 
 type FetchCPDeviceInfo struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Client *cp_client.Client
 }
 
 func (data FetchCPDeviceInfo) Run() {
 	fmt.Println("[Run] Update cp devices info...")
-	client := cp_client.NewClient()
 
 	var cpUser model.CPUser
 	userResult := data.DB.First(&cpUser, "email = ?", os.Getenv("CP_EMAIL"))
@@ -39,7 +39,7 @@ func (data FetchCPDeviceInfo) Run() {
 		commandStatusMap := map[string]cp_client.CommandTypeInfo{}
 
 		for _, commandTypes := range [][]cp_client.CommandType{allCommandTypes[:cp_client.MaxCommandCount], allCommandTypes[cp_client.MaxCommandCount:]} {
-			deviceInfoResponse, err := client.DeviceInfo(cpUser.CPToken, device.Auth, cp_client.DeviceInfoRequest{
+			deviceInfoResponse, err := data.Client.DeviceInfo(cpUser.CPToken, device.Auth, cp_client.DeviceInfoRequest{
 				DeviceID:     device.DeviceID,
 				CommandTypes: commandTypes,
 			})

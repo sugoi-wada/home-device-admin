@@ -11,12 +11,12 @@ import (
 )
 
 type FetchCPDeviceList struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Client *cp_client.Client
 }
 
 func (data FetchCPDeviceList) Run() {
 	fmt.Println("[Run] Update cp devices status...")
-	client := cp_client.NewClient()
 
 	var cpUser model.CPUser
 	userResult := data.DB.First(&cpUser, "email = ?", os.Getenv("CP_EMAIL"))
@@ -25,7 +25,7 @@ func (data FetchCPDeviceList) Run() {
 		return
 	}
 
-	deviceListResponse, err := client.DeviceList(cpUser.CPToken)
+	deviceListResponse, err := data.Client.DeviceList(cpUser.CPToken)
 
 	if err != nil {
 		fmt.Println(fmt.Errorf("CPデバイス一覧の取得に失敗しました。 %v", err))
@@ -35,7 +35,7 @@ func (data FetchCPDeviceList) Run() {
 	for _, gw := range deviceListResponse.GWList {
 		for _, device := range gw.Devices {
 			device := model.CPDevice{
-				GatewayID: gw.GWID,
+				GatewayID: gw.GatewayID,
 				Auth:      gw.Auth,
 				DeviceID:  device.DeviceID,
 				Nickname:  device.NickName,
