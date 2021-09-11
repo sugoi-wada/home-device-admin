@@ -76,11 +76,12 @@ type PanaProduct struct {
 }
 
 type ProductCommand struct {
-	CommandType   string     `json:"CommandType"`
-	CommandName   string     `json:"CommandName"`
-	ParameterUnit string     `json:"ParameterUnit"`
-	ParameterType string     `json:"ParameterType"`
-	Parameters    [][]string `json:"Parameters"`
+	CommandType   string `json:"CommandType"`
+	CommandName   string `json:"CommandName"`
+	ParameterUnit string `json:"ParameterUnit"`
+	ParameterType string `json:"ParameterType"`
+	// Unmarshal 方法がわからないのでコメントアウト [["string", 0]]
+	// Parameters    [][]string `json:"Parameters"`
 }
 
 type DeviceInfo struct {
