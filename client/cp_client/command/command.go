@@ -6,18 +6,21 @@ const (
 	Speed               = "0x02"
 	Temp                = "0x03"
 	InsideTemp          = "0x04"
+	Sleep               = "0x05"
 	Nanoex              = "0x08"
-	People              = "0x19"
-	OutsideTemp         = "0x21"
-	PM25                = "0x37"
 	OnTimer             = "0x0B"
 	OffTimer            = "0x0C"
 	VerticalDirection   = "0x0F"
 	HorizontalDirection = "0x11"
+	Dry                 = "0x17"
+	SelfClean           = "0x18"
+	People              = "0x19"
+	OutsideTemp         = "0x21"
 	Fast                = "0x1A"
 	Econavi             = "0x1B"
 	Volume              = "0x1E"
 	DisplayLight        = "0x1F"
+	PM25                = "0x37"
 )
 
 var switchState = map[string]string{
@@ -74,10 +77,13 @@ var enumParams = map[string]map[string]string{
 		"1": "暗",
 		"2": "ECO燈滅",
 	},
+	Sleep:     switchState,
 	Fast:      switchState,
 	Volume:    switchState,
 	Nanoex:    switchState,
 	Econavi:   switchState,
+	SelfClean: switchState,
+	Dry:       switchState,
 }
 
 var EnumParams = func(command string, value string) string {

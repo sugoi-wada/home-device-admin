@@ -72,6 +72,9 @@ func (data FetchCPDeviceInfo) Run() {
 			Econavi:             command.EnumParams(command.Econavi, commandStatusMap[command.Econavi]),
 			Volume:              command.EnumParams(command.Volume, commandStatusMap[command.Volume]),
 			DisplayLight:        command.EnumParams(command.DisplayLight, commandStatusMap[command.DisplayLight]),
+			Sleep:               command.EnumParams(command.Sleep, commandStatusMap[command.Sleep]),
+			Dry:                 command.EnumParams(command.Dry, commandStatusMap[command.Dry]),
+			SelfClean:           command.EnumParams(command.SelfClean, commandStatusMap[command.SelfClean]),
 		}
 
 		data.DB.Clauses(clause.OnConflict{
@@ -94,6 +97,9 @@ func (data FetchCPDeviceInfo) Run() {
 				"econavi",
 				"volume",
 				"display_light",
+				"sleep",
+				"dry",
+				"self_clean",
 				"updated_at",
 			}),
 		}).Create(&state)

@@ -22,6 +22,9 @@ type CPDeviceState struct {
 	Econavi             string
 	Volume              string
 	DisplayLight        string
+	Sleep               string
+	Dry                 string
+	SelfClean           string
 	CreatedAt           time.Time
 	UpdatedAt           time.Time
 }
