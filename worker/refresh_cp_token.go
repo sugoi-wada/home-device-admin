@@ -11,14 +11,14 @@ import (
 )
 
 type RefreshCPToken struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Client *cp_client.Client
 }
 
 func (data RefreshCPToken) Run() {
 	fmt.Println("[Run] Refresh CPToken...")
-	client := cp_client.NewClient()
 
-	userLoginResponse, err := client.UserLogin(cp_client.UserLoginRequest{
+	userLoginResponse, err := data.Client.UserLogin(cp_client.UserLoginRequest{
 		Email:    os.Getenv("CP_EMAIL"),
 		Password: os.Getenv("CP_PASSWORD"),
 		AppToken: os.Getenv("CP_APP_TOKEN"),

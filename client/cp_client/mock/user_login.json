@@ -1,0 +1,6 @@
+{
+  "CPToken": "CPTOKEN-STRING-01234",
+  "ExpireTime": "20210918134729",
+  "RefreshToken": "test.refresh.token.string",
+  "MVersion": "20210910140206"
+}
