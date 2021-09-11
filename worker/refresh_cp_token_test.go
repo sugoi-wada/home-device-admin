@@ -15,13 +15,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type TestSuite struct {
+type RefreshCPTokenWorkerTestSuite struct {
 	suite.Suite
 	worker *RefreshCPToken
 	mock   sqlmock.Sqlmock
 }
 
-func (suite *TestSuite) SetupTest() {
+func (suite *RefreshCPTokenWorkerTestSuite) SetupTest() {
 	db, mock, _ := sqlmock.New()
 	suite.mock = mock
 	worker := &RefreshCPToken{}
@@ -36,17 +36,17 @@ func (suite *TestSuite) SetupTest() {
 	suite.worker = worker
 }
 
-func (suite *TestSuite) TearDownTest() {
+func (suite *RefreshCPTokenWorkerTestSuite) TearDownTest() {
 	db, _ := suite.worker.DB.DB()
 	db.Close()
 	httpmock.DeactivateAndReset()
 }
 
 func TestRefreshCPTokenTestSuite(t *testing.T) {
-	suite.Run(t, new(TestSuite))
+	suite.Run(t, new(RefreshCPTokenWorkerTestSuite))
 }
 
-func (suite *TestSuite) TestCPToken取得タスクが成功するはず() {
+func (suite *RefreshCPTokenWorkerTestSuite) TestCPToken取得タスクが成功するはず() {
 	responder, _ := httpmock.NewJsonResponder(200, httpmock.File("../client/cp_client/mock/user_login.json"))
 	httpmock.RegisterResponder("POST", "/api/userlogin1", responder)
 
