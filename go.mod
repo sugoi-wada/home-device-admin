@@ -14,7 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
-	github.com/vektah/gqlparser/v2 v2.1.0
+	github.com/vektah/gqlparser/v2 v2.2.0
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
