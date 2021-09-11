@@ -33,8 +33,8 @@ func main() {
 		client := cp_client.NewClient()
 		jobrunner.Now(worker.RefreshCPToken{DB: db, Client: client})
 		jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db, Client: client})
-		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db})
-		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db})
+		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db, Client: client})
+		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db, Client: client})
 	}
 	e := echo.New()
 
