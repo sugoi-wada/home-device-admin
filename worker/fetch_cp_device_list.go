@@ -35,7 +35,7 @@ func (data FetchCPDeviceList) Run() {
 	for _, gw := range deviceListResponse.GWList {
 		for _, device := range gw.Devices {
 			device := model.CPDevice{
-				GatewayID: gw.GWID,
+				GatewayID: gw.GatewayID,
 				Auth:      gw.Auth,
 				DeviceID:  device.DeviceID,
 				Nickname:  device.NickName,

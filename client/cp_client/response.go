@@ -10,8 +10,41 @@ type Response struct {
 
 type DeviceListResponse struct {
 	Response
-	GWList     []Gateway   `json:"GWList"`
-	PanaModels []PanaModel `json:"CommandList"`
+	GWList []struct {
+		GatewayID string `json:"GWID"`
+		NickName  string `json:"NickName"`
+		Auth      string `json:"auth"`
+		HSType    string `json:"HSType"`
+		ModelID   string `json:"ModelID"`
+		City      string `json:"City"`
+		Area      string `json:"Area"`
+		Devices   []struct {
+			DeviceID   string `json:"DeviceID"`
+			NickName   string `json:"NickName"`
+			DeviceType string `json:"DeviceType"`
+			AreaID     string `json:"AreaID"`
+			ModelType  string `json:"ModelType"`
+			Model      string `json:"Model"`
+		} `json:"Devices"`
+	} `json:"GWList"`
+	CommandList []struct {
+		ModelType string `json:"ModelType"`
+		JSON      []struct {
+			DeviceType      int    `json:"DeviceType"`
+			DeviceName      string `json:"DeviceName"`
+			ModelType       string `json:"ModelType"`
+			ProtocalType    string `json:"ProtocalType"`
+			ProtocalVersion string `json:"ProtocalVersion"`
+			Timestamp       string `json:"Timestamp"`
+			List            []struct {
+				CommandType   string          `json:"CommandType"`
+				CommandName   string          `json:"CommandName"`
+				ParameterType string          `json:"ParameterType"`
+				ParameterUnit string          `json:"ParameterUnit"`
+				Parameters    [][]interface{} `json:"Parameters"`
+			} `json:"list"`
+		} `json:"JSON"`
+	} `json:"CommandList"`
 }
 
 type DeviceInfoResponse struct {
@@ -39,50 +72,6 @@ type UserLoginResponse struct {
 }
 
 // Nested types
-
-type Gateway struct {
-	GWID     string   `json:"GWID"`
-	NickName string   `json:"NickName"`
-	Auth     string   `json:"auth"`
-	HSType   string   `json:"HSType"`
-	ModelID  string   `json:"ModelID"`
-	City     string   `json:"City"`
-	Area     string   `json:"Area"`
-	Devices  []Device `json:"Devices"`
-}
-
-type Device struct {
-	DeviceID   string `json:"DeviceID"`
-	NickName   string `json:"NickName"`
-	DeviceType string `json:"DeviceType"`
-	AreaID     string `json:"AreaID"`
-	ModelType  string `json:"ModelType"`
-	Model      string `json:"Model"`
-}
-
-type PanaModel struct {
-	ModelType    string        `json:"ModelType"`
-	PanaProducts []PanaProduct `json:"JSON"`
-}
-
-type PanaProduct struct {
-	DeviceType      int32            `json:"DeviceType"`
-	DeviceName      string           `json:"DeviceName"`
-	ModelType       string           `json:"ModelType"`
-	ProtocalType    string           `json:"ProtocalType"`
-	ProtocalVersion string           `json:"ProtocalVersion"`
-	Timestamp       string           `json:"Timestamp"`
-	Commands        []ProductCommand `json:"list"`
-}
-
-type ProductCommand struct {
-	CommandType   string `json:"CommandType"`
-	CommandName   string `json:"CommandName"`
-	ParameterUnit string `json:"ParameterUnit"`
-	ParameterType string `json:"ParameterType"`
-	// Unmarshal 方法がわからないのでコメントアウト [["string", 0]]
-	// Parameters    [][]string `json:"Parameters"`
-}
 
 type DeviceInfo struct {
 	DeviceID int32             `json:"DeviceID"`
