@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/sugoi-wada/home-device-admin/client/cp_client"
-	"github.com/sugoi-wada/home-device-admin/client/cp_client/command"
+	"github.com/sugoi-wada/home-device-admin/client/cp_client/cmd"
 	"github.com/sugoi-wada/home-device-admin/db/model"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -36,7 +36,7 @@ func (data FetchCPDeviceInfo) Run() {
 	allCommandTypes := cp_client.AllCommandTypes()
 
 	for _, device := range cpDevices {
-		commandStatusMap := map[string]string{}
+		commandStatusMap := map[string]cp_client.CommandTypeInfo{}
 
 		for _, commandTypes := range [][]cp_client.CommandType{allCommandTypes[:cp_client.MaxCommandCount], allCommandTypes[cp_client.MaxCommandCount:]} {
 			deviceInfoResponse, err := client.DeviceInfo(cpUser.CPToken, device.Auth, cp_client.DeviceInfoRequest{
@@ -49,32 +49,32 @@ func (data FetchCPDeviceInfo) Run() {
 			}
 
 			for _, info := range deviceInfoResponse.Devices[0].Info {
-				commandStatusMap[info.CommandType.CommandType] = info.Status
+				commandStatusMap[info.CommandType.CommandType] = info
 			}
 		}
 
 		state := model.CPDeviceState{
 			CPDeviceID:          device.ID,
-			Power:               command.EnumParams(command.Power, commandStatusMap[command.Power]),
-			Feature:             command.EnumParams(command.Feature, commandStatusMap[command.Feature]),
-			Speed:               command.EnumParams(command.Speed, commandStatusMap[command.Speed]),
-			Temp:                commandStatusMap[command.Temp],
-			InsideTemp:          commandStatusMap[command.InsideTemp],
-			Nanoex:              command.EnumParams(command.Nanoex, commandStatusMap[command.Nanoex]),
-			People:              command.EnumParams(command.People, commandStatusMap[command.People]),
-			OutsideTemp:         commandStatusMap[command.OutsideTemp],
-			PM25:                commandStatusMap[command.PM25],
-			OnTimer:             commandStatusMap[command.OnTimer],
-			OffTimer:            commandStatusMap[command.OffTimer],
-			VerticalDirection:   command.EnumParams(command.VerticalDirection, commandStatusMap[command.VerticalDirection]),
-			HorizontalDirection: command.EnumParams(command.HorizontalDirection, commandStatusMap[command.HorizontalDirection]),
-			Fast:                command.EnumParams(command.Fast, commandStatusMap[command.Fast]),
-			Econavi:             command.EnumParams(command.Econavi, commandStatusMap[command.Econavi]),
-			Volume:              command.EnumParams(command.Volume, commandStatusMap[command.Volume]),
-			DisplayLight:        command.EnumParams(command.DisplayLight, commandStatusMap[command.DisplayLight]),
-			Sleep:               command.EnumParams(command.Sleep, commandStatusMap[command.Sleep]),
-			Dry:                 command.EnumParams(command.Dry, commandStatusMap[command.Dry]),
-			SelfClean:           command.EnumParams(command.SelfClean, commandStatusMap[command.SelfClean]),
+			Power:               commandStatusMap[cmd.Power].Localize(),
+			Feature:             commandStatusMap[cmd.Feature].Localize(),
+			Speed:               commandStatusMap[cmd.Speed].Localize(),
+			Temp:                commandStatusMap[cmd.Temp].Localize(),
+			InsideTemp:          commandStatusMap[cmd.InsideTemp].Localize(),
+			Nanoex:              commandStatusMap[cmd.Nanoex].Localize(),
+			People:              commandStatusMap[cmd.People].Localize(),
+			OutsideTemp:         commandStatusMap[cmd.OutsideTemp].Localize(),
+			PM25:                commandStatusMap[cmd.PM25].Localize(),
+			OnTimer:             commandStatusMap[cmd.OnTimer].Localize(),
+			OffTimer:            commandStatusMap[cmd.OffTimer].Localize(),
+			VerticalDirection:   commandStatusMap[cmd.VerticalDirection].Localize(),
+			HorizontalDirection: commandStatusMap[cmd.HorizontalDirection].Localize(),
+			Fast:                commandStatusMap[cmd.Fast].Localize(),
+			Econavi:             commandStatusMap[cmd.Econavi].Localize(),
+			Volume:              commandStatusMap[cmd.Volume].Localize(),
+			DisplayLight:        commandStatusMap[cmd.DisplayLight].Localize(),
+			Sleep:               commandStatusMap[cmd.Sleep].Localize(),
+			Dry:                 commandStatusMap[cmd.Dry].Localize(),
+			SelfClean:           commandStatusMap[cmd.SelfClean].Localize(),
 		}
 
 		data.DB.Clauses(clause.OnConflict{

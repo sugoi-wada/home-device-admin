@@ -1,4 +1,4 @@
-package command
+package cmd
 
 const (
 	Power               = "0x00"
@@ -86,6 +86,10 @@ var enumParams = map[string]map[string]string{
 	Dry:       switchState,
 }
 
-var EnumParams = func(command string, value string) string {
-	return enumParams[command][value]
+func EnumParams(cmd string) (map[string]string, bool) {
+	if params, found := enumParams[cmd]; found {
+		return params, found
+	}
+
+	return nil, false
 }
