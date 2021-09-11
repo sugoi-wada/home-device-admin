@@ -4,7 +4,7 @@ module github.com/sugoi-wada/home-device-admin
 go 1.16
 
 require (
-	github.com/99designs/gqlgen v0.13.0
+	github.com/99designs/gqlgen v0.14.0
 	github.com/bamzi/jobrunner v1.0.0
 	github.com/go-resty/resty/v2 v2.6.0
 	github.com/labstack/echo v3.3.10+incompatible
