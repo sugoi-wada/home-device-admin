@@ -1,4 +1,4 @@
-package worker
+package repo
 
 import (
 	"fmt"
@@ -6,19 +6,11 @@ import (
 
 	"github.com/sugoi-wada/home-device-admin/client/cp_client"
 	"github.com/sugoi-wada/home-device-admin/db/model"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-type RefreshCPToken struct {
-	DB     *gorm.DB
-	Client *cp_client.Client
-}
-
-func (data RefreshCPToken) Run() {
-	fmt.Println("[Run] Refresh CPToken...")
-
-	userLoginResponse, err := data.Client.UserLogin(cp_client.UserLoginRequest{
+func (repo CPDeviceRepo) RefreshCPToken() {
+	userLoginResponse, err := repo.Client.UserLogin(cp_client.UserLoginRequest{
 		Email:    os.Getenv("CP_EMAIL"),
 		Password: os.Getenv("CP_PASSWORD"),
 		AppToken: os.Getenv("CP_APP_TOKEN"),
@@ -37,7 +29,7 @@ func (data RefreshCPToken) Run() {
 		MVersion:     userLoginResponse.MVersion,
 	}
 
-	data.DB.Clauses(clause.OnConflict{
+	repo.DB.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "email"}},
 		DoUpdates: clause.AssignmentColumns([]string{"cp_token", "expire_time", "refresh_token", "m_version", "updated_at"}),
 	}).Create(&cpUser)

@@ -1,4 +1,4 @@
-package worker
+package repo
 
 import (
 	"fmt"
@@ -7,27 +7,19 @@ import (
 	"github.com/sugoi-wada/home-device-admin/client/cp_client"
 	"github.com/sugoi-wada/home-device-admin/client/cp_client/cmd"
 	"github.com/sugoi-wada/home-device-admin/db/model"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-type FetchCPDeviceInfo struct {
-	DB     *gorm.DB
-	Client *cp_client.Client
-}
-
-func (data FetchCPDeviceInfo) Run() {
-	fmt.Println("[Run] Update cp devices info...")
-
+func (repo CPDeviceRepo) FetchCPDeviceInfo() {
 	var cpUser model.CPUser
-	userResult := data.DB.First(&cpUser, "email = ?", os.Getenv("CP_EMAIL"))
+	userResult := repo.DB.First(&cpUser, "email = ?", os.Getenv("CP_EMAIL"))
 	if userResult.Error != nil {
 		fmt.Println(fmt.Errorf("CPTokenの検索に失敗したため、CPデバイス情報の更新をキャンセルします。 %v", userResult.Error))
 		return
 	}
 
 	var cpDevices []model.CPDevice
-	devicesResult := data.DB.Find(&cpDevices)
+	devicesResult := repo.DB.Find(&cpDevices)
 	if devicesResult.Error != nil {
 		fmt.Println(fmt.Errorf("CPDevice一覧の取得に失敗したため、CPデバイス情報の更新をキャンセルします。 %v", devicesResult.Error))
 		return
@@ -39,7 +31,7 @@ func (data FetchCPDeviceInfo) Run() {
 		commandStatusMap := map[string]cp_client.CommandTypeInfo{}
 
 		for _, commandTypes := range [][]cp_client.CommandType{allCommandTypes[:cp_client.MaxCommandCount], allCommandTypes[cp_client.MaxCommandCount:]} {
-			deviceInfoResponse, err := data.Client.DeviceInfo(cpUser.CPToken, device.Auth, cp_client.DeviceInfoRequest{
+			deviceInfoResponse, err := repo.Client.DeviceInfo(cpUser.CPToken, device.Auth, cp_client.DeviceInfoRequest{
 				DeviceID:     device.DeviceID,
 				CommandTypes: commandTypes,
 			})
@@ -77,7 +69,7 @@ func (data FetchCPDeviceInfo) Run() {
 			SelfClean:           commandStatusMap[cmd.SelfClean].Localize(),
 		}
 
-		data.DB.Clauses(clause.OnConflict{
+		repo.DB.Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "cp_device_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{
 				"power",
