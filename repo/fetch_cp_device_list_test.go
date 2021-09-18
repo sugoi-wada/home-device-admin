@@ -1,4 +1,4 @@
-package worker
+package repo
 
 import (
 	"os"
@@ -19,27 +19,27 @@ import (
 
 type FetchCPDeviceListTestSuite struct {
 	suite.Suite
-	worker *FetchCPDeviceList
-	mock   sqlmock.Sqlmock
+	repo *CPDeviceRepo
+	mock sqlmock.Sqlmock
 }
 
 func (suite *FetchCPDeviceListTestSuite) SetupTest() {
 	db, mock, _ := sqlmock.New()
 	suite.mock = mock
-	worker := &FetchCPDeviceList{}
-	worker.DB, _ = gorm.Open(postgres.New(postgres.Config{
+	repo := &CPDeviceRepo{}
+	repo.DB, _ = gorm.Open(postgres.New(postgres.Config{
 		Conn: db,
 	}), config.GetConf())
 	rst := resty.New()
-	worker.Client = &cp_client.Client{
+	repo.Client = &cp_client.Client{
 		RestyClient: rst,
 	}
 	httpmock.ActivateNonDefault(rst.GetClient())
-	suite.worker = worker
+	suite.repo = repo
 }
 
 func (suite *FetchCPDeviceListTestSuite) TearDownTest() {
-	db, _ := suite.worker.DB.DB()
+	db, _ := suite.repo.DB.DB()
 	db.Close()
 	httpmock.DeactivateAndReset()
 }
@@ -48,7 +48,7 @@ func TestFetchCPDeviceListTestSuite(t *testing.T) {
 	suite.Run(t, new(FetchCPDeviceListTestSuite))
 }
 
-func (suite *FetchCPDeviceListTestSuite) Testデバイス一覧取得タスクが成功するはず() {
+func (suite *FetchCPDeviceListTestSuite) FetchCPDeviceListが成功するはず() {
 	responder, _ := httpmock.NewJsonResponder(200, httpmock.File("../client/cp_client/mock/device_list.json"))
 	httpmock.RegisterResponder("GET", "/api/UserGetRegisteredGWList1", responder)
 	userRows := sqlmock.
@@ -62,7 +62,7 @@ func (suite *FetchCPDeviceListTestSuite) Testデバイス一覧取得タスク�
 		`INSERT INTO "cp_devices" ("gateway_id","device_id","auth","nickname","created_at","updated_at") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("gateway_id","device_id") DO UPDATE SET "auth"="excluded"."auth","nickname"="excluded"."nickname","updated_at"="excluded"."updated_at" RETURNING "id"`,
 	)).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 	suite.mock.ExpectCommit()
-	suite.worker.Run()
+	suite.repo.FetchCPDeviceList()
 
 	if err := suite.mock.ExpectationsWereMet(); err != nil {
 		suite.T().Errorf("there were unfulfilled expectations: %s", err)

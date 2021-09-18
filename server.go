@@ -15,7 +15,8 @@ import (
 	db_config "github.com/sugoi-wada/home-device-admin/db/config"
 	"github.com/sugoi-wada/home-device-admin/graph"
 	"github.com/sugoi-wada/home-device-admin/graph/generated"
-	"github.com/sugoi-wada/home-device-admin/worker"
+	"github.com/sugoi-wada/home-device-admin/job"
+	"github.com/sugoi-wada/home-device-admin/repo"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -31,10 +32,11 @@ func main() {
 	jobrunner.Start()
 	if os.Getenv("DEBUG") != "true" {
 		client := cp_client.NewClient()
-		jobrunner.Now(worker.RefreshCPToken{DB: db, Client: client})
-		jobrunner.In(5*time.Minute, worker.FetchCPDeviceList{DB: db, Client: client})
-		jobrunner.Every(10*time.Minute, worker.FetchCPDeviceInfo{DB: db, Client: client})
-		jobrunner.Every(1*time.Hour, worker.RefreshCPToken{DB: db, Client: client})
+		repo := &repo.CPDeviceRepo{DB: db, Client: client}
+		jobrunner.Now(job.RefreshCPToken{Repo: repo})
+		jobrunner.In(5*time.Minute, job.FetchCPDeviceList{Repo: repo})
+		jobrunner.Every(10*time.Minute, job.FetchCPDeviceInfo{Repo: repo})
+		jobrunner.Every(1*time.Hour, job.RefreshCPToken{Repo: repo})
 	}
 	e := echo.New()
 

@@ -1,4 +1,4 @@
-package worker
+package repo
 
 import (
 	"encoding/json"
@@ -23,27 +23,27 @@ import (
 
 type FetchCPDeviceInfoTestSuite struct {
 	suite.Suite
-	worker *FetchCPDeviceInfo
-	mock   sqlmock.Sqlmock
+	repo *CPDeviceRepo
+	mock sqlmock.Sqlmock
 }
 
 func (suite *FetchCPDeviceInfoTestSuite) SetupTest() {
 	db, mock, _ := sqlmock.New()
 	suite.mock = mock
-	worker := &FetchCPDeviceInfo{}
-	worker.DB, _ = gorm.Open(postgres.New(postgres.Config{
+	repo := &CPDeviceRepo{}
+	repo.DB, _ = gorm.Open(postgres.New(postgres.Config{
 		Conn: db,
 	}), config.GetConf())
 	rst := resty.New()
-	worker.Client = &cp_client.Client{
+	repo.Client = &cp_client.Client{
 		RestyClient: rst,
 	}
 	httpmock.ActivateNonDefault(rst.GetClient())
-	suite.worker = worker
+	suite.repo = repo
 }
 
 func (suite *FetchCPDeviceInfoTestSuite) TearDownTest() {
-	db, _ := suite.worker.DB.DB()
+	db, _ := suite.repo.DB.DB()
 	db.Close()
 	httpmock.DeactivateAndReset()
 }
@@ -52,7 +52,7 @@ func TestFetchCPDeviceInfoTestSuite(t *testing.T) {
 	suite.Run(t, new(FetchCPDeviceInfoTestSuite))
 }
 
-func (suite *FetchCPDeviceInfoTestSuite) Testデバイスのステータス取得タスクが成功するはず() {
+func (suite *FetchCPDeviceInfoTestSuite) FetchCPDeviceInfoが成功するはず() {
 	httpmock.RegisterResponder("GET", "/api/DeviceGetInfo",
 		func(req *http.Request) (*http.Response, error) {
 			reqBody := &cp_client.DeviceInfoRequest{}
@@ -104,7 +104,7 @@ func (suite *FetchCPDeviceInfoTestSuite) Testデバイスのステータス取�
 		`INSERT INTO "cp_device_states" ("cp_device_id","power","feature","speed","temp","inside_temp","nanoex","people","outside_temp","pm25","on_timer","off_timer","vertical_direction","horizontal_direction","fast","econavi","volume","display_light","sleep","dry","self_clean","created_at","updated_at") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23) ON CONFLICT ("cp_device_id") DO UPDATE SET "power"="excluded"."power","feature"="excluded"."feature","speed"="excluded"."speed","temp"="excluded"."temp","inside_temp"="excluded"."inside_temp","nanoex"="excluded"."nanoex","people"="excluded"."people","outside_temp"="excluded"."outside_temp","pm25"="excluded"."pm25","on_timer"="excluded"."on_timer","off_timer"="excluded"."off_timer","vertical_direction"="excluded"."vertical_direction","horizontal_direction"="excluded"."horizontal_direction","fast"="excluded"."fast","econavi"="excluded"."econavi","volume"="excluded"."volume","display_light"="excluded"."display_light","sleep"="excluded"."sleep","dry"="excluded"."dry","self_clean"="excluded"."self_clean","updated_at"="excluded"."updated_at" RETURNING "id"`,
 	)).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 	suite.mock.ExpectCommit()
-	suite.worker.Run()
+	suite.repo.FetchCPDeviceInfo()
 
 	if err := suite.mock.ExpectationsWereMet(); err != nil {
 		suite.T().Errorf("there were unfulfilled expectations: %s", err)
