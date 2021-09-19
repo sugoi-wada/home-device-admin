@@ -26,6 +26,9 @@ type CPDevice {
   econavi: String!
   volume: String!
   display_light: String!
+  sleep: String!
+  dry: String!
+  self_clean: String!
 }
 
 type Query {

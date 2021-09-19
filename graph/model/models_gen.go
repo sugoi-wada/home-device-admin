@@ -23,4 +23,7 @@ type CPDevice struct {
 	Econavi             string `json:"econavi"`
 	Volume              string `json:"volume"`
 	DisplayLight        string `json:"display_light"`
+	Sleep               string `json:"sleep"`
+	Dry                 string `json:"dry"`
+	SelfClean           string `json:"self_clean"`
 }

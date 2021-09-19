@@ -38,6 +38,9 @@ func (r *queryResolver) CpDevices(ctx context.Context) ([]*model.CPDevice, error
 			Econavi:             device.State.Econavi,
 			Volume:              device.State.Volume,
 			DisplayLight:        device.State.DisplayLight,
+			Sleep:               device.State.Sleep,
+			Dry:                 device.State.Dry,
+			SelfClean:           device.State.SelfClean,
 		})
 	}
 

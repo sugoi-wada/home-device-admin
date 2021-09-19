@@ -45,6 +45,7 @@ type ComplexityRoot struct {
 	CPDevice struct {
 		DeviceID            func(childComplexity int) int
 		DisplayLight        func(childComplexity int) int
+		Dry                 func(childComplexity int) int
 		Econavi             func(childComplexity int) int
 		Fast                func(childComplexity int) int
 		Feature             func(childComplexity int) int
@@ -59,6 +60,8 @@ type ComplexityRoot struct {
 		People              func(childComplexity int) int
 		Pm25                func(childComplexity int) int
 		Power               func(childComplexity int) int
+		SelfClean           func(childComplexity int) int
+		Sleep               func(childComplexity int) int
 		Speed               func(childComplexity int) int
 		Temp                func(childComplexity int) int
 		VerticalDirection   func(childComplexity int) int
@@ -104,6 +107,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CPDevice.DisplayLight(childComplexity), true
+
+	case "CPDevice.dry":
+		if e.complexity.CPDevice.Dry == nil {
+			break
+		}
+
+		return e.complexity.CPDevice.Dry(childComplexity), true
 
 	case "CPDevice.econavi":
 		if e.complexity.CPDevice.Econavi == nil {
@@ -202,6 +212,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CPDevice.Power(childComplexity), true
+
+	case "CPDevice.self_clean":
+		if e.complexity.CPDevice.SelfClean == nil {
+			break
+		}
+
+		return e.complexity.CPDevice.SelfClean(childComplexity), true
+
+	case "CPDevice.sleep":
+		if e.complexity.CPDevice.Sleep == nil {
+			break
+		}
+
+		return e.complexity.CPDevice.Sleep(childComplexity), true
 
 	case "CPDevice.speed":
 		if e.complexity.CPDevice.Speed == nil {
@@ -328,6 +352,9 @@ type CPDevice {
   econavi: String!
   volume: String!
   display_light: String!
+  sleep: String!
+  dry: String!
+  self_clean: String!
 }
 
 type Query {
@@ -1094,6 +1121,111 @@ func (ec *executionContext) _CPDevice_display_light(ctx context.Context, field g
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.DisplayLight, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CPDevice_sleep(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CPDevice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sleep, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CPDevice_dry(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CPDevice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Dry, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CPDevice_self_clean(ctx context.Context, field graphql.CollectedField, obj *model.CPDevice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CPDevice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SelfClean, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2461,6 +2593,21 @@ func (ec *executionContext) _CPDevice(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "display_light":
 			out.Values[i] = ec._CPDevice_display_light(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "sleep":
+			out.Values[i] = ec._CPDevice_sleep(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "dry":
+			out.Values[i] = ec._CPDevice_dry(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "self_clean":
+			out.Values[i] = ec._CPDevice_self_clean(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
