@@ -7,7 +7,7 @@ require (
 	github.com/99designs/gqlgen v0.14.0
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/bamzi/jobrunner v1.0.0
-	github.com/go-resty/resty/v2 v2.6.0
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/labstack/echo/v4 v4.5.0
 	github.com/lib/pq v1.10.3 // indirect
